@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://webinar-backend-zyp1.onrender.comm',
+        target: 'https://webinar-backend-ku1e.onrender.com',
         changeOrigin: true,
       },
     },
