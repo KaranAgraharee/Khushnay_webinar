@@ -102,7 +102,7 @@ const Features = () => {
                     className={`fact-chip${primary ? ' fact-chip--primary' : ''}`}
                   >
                     <span className="fact-chip__label">{label}</span>
-                    <span className="fact-chip__value">{value}</span>
+                    <span className="fact-chip__value">90</span>
                   </StaggerItem>
                 ))}
               </StaggerReveal>
