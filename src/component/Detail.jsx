@@ -32,7 +32,7 @@ const Features = () => {
         hour12: true,
       })
 
-  const mode = webinar?.venue || Webinar_info.Mode
+  const mode = (webinar?.venue || Webinar_info.Mode) +" "+ Webinar_info.Privacy
 
   return (
     <>
@@ -77,6 +77,9 @@ const Features = () => {
           <Reveal delay={0.1}>
             <div className="agenda-details agenda-details-card">
               <div className="agenda-details-header">
+                <h3 className="agenda-webinar-title">
+                  {webinar?.title || Webinar_info.title}
+                </h3>
                 <h3 className="agenda-webinar-title">
                   {webinar?.title || Webinar_info.title}
                 </h3>
