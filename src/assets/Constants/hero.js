@@ -21,7 +21,7 @@ const KeyFacts = [
 ]
 
 const Trust_Line = [
-  "Your face and camera remain private during the session.",
+  "🔒 Join With Confidence",
   'Live Interactive Session',
   "Real guidance. Real transformation.",
   'Q&A with Khushboo',
