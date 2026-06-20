@@ -81,7 +81,7 @@ const Features = () => {
                   {webinar?.title || Webinar_info.title}
                 </h3>
                 <span className="price-badge">
-                  {webinar ? formatWebinarPrice(webinar.price) : Webinar_info.price}
+                  {Webinar_info.price}
                 </span>
               </div>
 
