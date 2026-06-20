@@ -80,9 +80,6 @@ const Features = () => {
                 <h3 className="agenda-webinar-title">
                   {webinar?.title || Webinar_info.title}
                 </h3>
-                <h3 className="agenda-webinar-title">
-                  {webinar?.title || Webinar_info.title}
-                </h3>
                 <span className="price-badge">
                   {webinar ? formatWebinarPrice(webinar.price) : Webinar_info.price}
                 </span>
@@ -131,6 +128,7 @@ const Features = () => {
                   className="btn btn-primary btn-primary-lg"
                   pulse
                 />
+                <p claName="text-lg md:text-lg font-bold text-green-900 tracking-tight">{Webinar_info?.security}</p>
                 <p className="agenda-register-note">{Webinar_info.registerNote}</p>
               </div>
             </div>
