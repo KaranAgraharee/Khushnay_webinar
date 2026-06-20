@@ -43,7 +43,7 @@ export const features = {
     ]
 };
 export const Webinar_info = {
-    Date:'2026-06-20T11:30:00',
+    Date:'2026-06-27T11:30:00',
     Duration:'90 minutes',
     Mode: 'Online · Join from anywhere',
     title: 'What Happens During the Webinar',
