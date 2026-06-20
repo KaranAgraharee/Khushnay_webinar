@@ -14,7 +14,7 @@ export const learnSection = {
   eyebrow: "What you'll walk away with",
   title: 'Four Shifts That Will Change Your Marriage',
   description:
-    'This is not a lecture. This is a live experience designed to give you clarity, tools, and hope — in one session.',
+    "This is not a lecture. This is a live experience designed to give you clarity, tools, and hope — in one session. Don't worry — your face and camera remain private during the session.",
   items: [
     {
       num: '01',
