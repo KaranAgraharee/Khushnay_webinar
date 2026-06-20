@@ -45,14 +45,15 @@ export const features = {
 export const Webinar_info = {
     Date:'2026-06-27T11:30:00',
     Duration:'90 minutes',
-    Privacy:'🎥 Faces Remain Blurred',
+    Privacy:'Confidential & Privacy-Focused Session',
     Mode: 'Online · Join from anywhere',
     title: 'What Happens During the Webinar',
     description:
         'A structured 90-minute live session with Q&A — designed for working professionals with busy schedules.',
     price: '₹99',
+    security:'🛡️ Privacy-Focused Webinar'
     registerNote:
-        'Online · Either partner can join alone · Webinar attendees are invisible (FACES ARE BLURRED) . · Registered attendees receive a replay link valid for 48 hours',
+        'Online · Either partner can join alone.· Registered attendees receive a replay link valid for 48 hours',
 }
 
 export const Webinar_agenda = [
