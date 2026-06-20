@@ -14,10 +14,8 @@ const Register = ({ className = 'btn btn-primary', label, pulse = false }) => {
     webinarLoading,
   } = useRegisterWebinar()
 
-  const buttonLabel = isRegistered
-    ? 'Already registered ✓'
-    : label ??
-      (`${CTA.buttonText} · 33 `)
+const buttonLabel = isRegistered ? 'Already registered ✓' : (label ?? `${CTA.buttonText} · 33 `);
+
 
   const buttonText = !isAuthLoaded
     ? 'Checking authentication…'
