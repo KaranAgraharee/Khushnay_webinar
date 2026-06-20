@@ -62,7 +62,7 @@ const Hero = () => {
           <Reveal variant="fadeUp" animateOnMount delay={0.4}>
             <div className="hero-actions">
               <Register
-                label="Register Now · ₹99"
+                label="Register Now · ₹33"
                 className="btn btn-primary btn-primary-lg"
                 pulse
               />
