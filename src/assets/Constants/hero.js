@@ -6,7 +6,8 @@ const Subheading =
   'You chose each other. But somewhere along the way, love started to feel like pain, loneliness, and exhaustion. You deserve to understand  — and how to heal.'
 
 const HeroTags = [
-  { label: 'Live Webinar', emphasis: true },
+  { label: 'Live Webinar', emphasis: true }, 
+  { label: 'Private & Secure', emphasis: true }, 
   { label: '90 Minutes' },
   { label: '₹99 Only', emphasis: true },
   { label: 'Limited Seats' },
