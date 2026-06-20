@@ -51,7 +51,7 @@ export const Webinar_info = {
         'A structured 90-minute live session with Q&A — designed for working professionals with busy schedules.',
     price: '₹99',
     registerNote:
-        'Online · Either partner can join alone · Registered attendees receive a replay link valid for 48 hours',
+        'Online · Either partner can join alone · Webinar attendees are invisible (FACES ARE BLURRED) . · Registered attendees receive a replay link valid for 48 hours',
 }
 
 export const Webinar_agenda = [
