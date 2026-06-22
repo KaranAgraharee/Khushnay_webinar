@@ -1,6 +1,6 @@
 import { toUserFriendlyApiMessage } from '../utils/errorMessages.js'
 
-const API_BASE = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '')
+const API_BASE = 'https://webinar-backend-njpw.onrender.com'
 
 function buildApiUrl(path) {
   if (typeof path !== 'string' || !path.trim()) {
