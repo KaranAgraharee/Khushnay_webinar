@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://webinar-backend-njpw.onrender.com/',
+        target: 'https://webinar-backend-njpw.onrender.com',
         changeOrigin: true,
       },
     },
