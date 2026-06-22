@@ -128,7 +128,7 @@ const Features = () => {
                   className="btn btn-primary btn-primary-lg"
                   pulse
                 />
-                <p claName="text-lg md:text-lg font-bold text-green-900 tracking-tight">{Webinar_info?.security}</p>
+                <p className="text-lg md:text-lg font-bold text-green-900 tracking-tight">{Webinar_info?.security}</p>
                 <p className="agenda-register-note">{Webinar_info.registerNote}</p>
               </div>
             </div>

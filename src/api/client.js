@@ -13,7 +13,7 @@ function buildApiUrl(path) {
     const url = new URL(trimmed)
     if (!url.pathname || url.pathname === '/') {
       throw new Error(
-        `API URL must include a route (e.g. /api/auth/sync). Got: ${trimmed}`
+        `API URL must include a route (e.g. /api/admin/login). Got: ${trimmed}`
       )
     }
     return url.toString()
@@ -41,20 +41,22 @@ export class ApiError extends Error {
   }
 }
 
+const TOKEN_KEY = 'admin_jwt_token'
+
 /**
  * @param {string} path
  * @param {{
  *   method?: string,
  *   body?: unknown,
- *   getToken?: () => Promise<string | null | undefined>
+ *   adminAuth?: boolean,   // attach admin JWT from localStorage
  * }} [options]
  */
 export async function apiRequest(path, options = {}) {
-  const { method = 'GET', body, getToken } = options
+  const { method = 'GET', body, adminAuth = false } = options
   const headers = { 'Content-Type': 'application/json' }
 
-  if (getToken) {
-    const token = await getToken()
+  if (adminAuth) {
+    const token = localStorage.getItem(TOKEN_KEY)
     if (token) headers.Authorization = `Bearer ${token}`
   }
 

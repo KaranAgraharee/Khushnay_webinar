@@ -1,17 +1,8 @@
-import {
-  Show,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from '@clerk/react'
 import { SPEAKER_IMAGE } from '../assets/Constants/about'
-import { useSyncAuthUser } from '../hooks/useSyncAuthUser.js'
 import Reveal from '../assets/animations/reveal.jsx'
 import WebinarTimer from './WebinarTimer'
 
 const Header = () => {
-  useSyncAuthUser()
-
   return (
     <header className="site-header">
       <Reveal variant="fadeDown" animateOnMount>
@@ -51,24 +42,6 @@ const Header = () => {
               <a href="#faq">FAQ</a>
               <a href="#register">Register</a>
             </nav>
-
-            <div className="signed-out">
-              <Show when="signed-out">
-                <SignInButton mode="modal">
-                  <button type="button" className="auth-btn">
-                    Sign in
-                  </button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <button type="button" className="auth-btn-signUp">
-                    Sign up
-                  </button>
-                </SignUpButton>
-              </Show>
-              <Show when="signed-in">
-                <UserButton />
-              </Show>
-            </div>
           </div>
         </div>
       </Reveal>
