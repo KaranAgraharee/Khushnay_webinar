@@ -13,9 +13,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://webinar-backend-ku1e.onrender.com',
+        target: process.env.VITE_API_URL,
         changeOrigin: true,
       },
     },
   },
 })
+

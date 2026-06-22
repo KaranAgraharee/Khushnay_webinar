@@ -9,14 +9,14 @@ const HeroTags = [
   { label: 'Live Webinar', emphasis: true }, 
   { label: 'Private & Secure', emphasis: true }, 
   { label: '90 Minutes' },
-  { label: '₹99 Only', emphasis: true },
+  { label: '₹33 Only', emphasis: true },
   { label: 'Limited Seats' },
 ]
 
 const KeyFacts = [
   { value: '90 min', label: 'Live session' },
   { value: 'Q&A', label: 'With Khushboo' },
-  { value: '₹99', label: 'Full access' },
+  { value: '₹33', label: 'Full access' },
   { value: 'PDF', label: 'Key takeaways' },
 ]
 

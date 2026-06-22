@@ -7,8 +7,13 @@ import {
 } from '../assets/Constants/hero'
 import Reveal, { Float, StaggerItem, StaggerReveal } from '../assets/animations/reveal.jsx'
 import Register from './RegisterButton'
+import { useWebinar } from '../context/WebinarContext'
+import { Webinar_info } from '../assets/Constants/Detail'
+import { formatWebinarPrice } from '../utils/webinar'
 
 const Hero = () => {
+    const { webinar, loading, error } = useWebinar()
+  
   return (
     <section className="hero">
       <div className="blur-circle blur1" />
@@ -61,10 +66,10 @@ const Hero = () => {
 
           <Reveal variant="fadeUp" animateOnMount delay={0.4}>
             <div className="hero-actions">
-              <Register
-                label="Register Now · ₹99"
+              <Register                
                 className="btn btn-primary btn-primary-lg"
                 pulse
+                label={`Reserve My Seat · ${webinar ? formatWebinarPrice(webinar.price) : Webinar_info.price} →`}
               />
             </div>
           </Reveal>

@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { useAuth } from '@clerk/react'
 import { getWebinars } from '../api/webinars.js'
 import { Webinar_info } from '../assets/Constants/Detail.js'
 import { getWebinarDateTime } from '../utils/webinar.js'
@@ -8,19 +7,16 @@ import { getUserFriendlyError } from '../utils/errorMessages.js'
 const WebinarContext = createContext(null)
 
 export function WebinarProvider({ children }) {
-  const { getToken, isLoaded } = useAuth()
   const [webinars, setWebinars] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   const fetchWebinars = useCallback(async () => {
-    if (!isLoaded) return
-
     setLoading(true)
     setError(null)
 
     try {
-      const result = await getWebinars(getToken)
+      const result = await getWebinars()
       setWebinars(result.data ?? [])
     } catch (err) {
       setError(
@@ -33,7 +29,7 @@ export function WebinarProvider({ children }) {
     } finally {
       setLoading(false)
     }
-  }, [getToken, isLoaded])
+  }, [])
 
   useEffect(() => {
     fetchWebinars()

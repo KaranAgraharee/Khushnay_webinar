@@ -1,14 +1,13 @@
 import { apiRequest } from './client.js'
 
-export function getRegistrationStatus(webinarId, getToken) {
-  const params = new URLSearchParams({ webinarId })
-  return apiRequest(`/api/register/status?${params.toString()}`, { getToken })
-}
-
-export function registerForWebinar(webinarId, getToken, profile = {}) {
+/**
+ * Register for a free webinar (no payment).
+ * @param {string} webinarId
+ * @param {{ name: string, phone: string, email: string }} profile
+ */
+export function registerForWebinar(webinarId, profile = {}) {
   return apiRequest('/api/register', {
     method: 'POST',
     body: { webinarId, ...profile },
-    getToken,
   })
 }

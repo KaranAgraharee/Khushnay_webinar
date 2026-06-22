@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import {
   Hero,
   Social_Media,
@@ -6,14 +7,15 @@ import {
   Footer,
   Features,
   Faq,
-  WhoBanner,
-  ProofStrip,
   TruthLearn,
   CtaSection,
 } from './component'
+import AdminLogin from './pages/AdminLogin.jsx'
+import AdminDashboard from './pages/AdminDashboard.jsx'
+import ProtectedAdminRoute from './component/ProtectedAdminRoute.jsx'
 import './App.css'
 
-function App() {
+function WebinarPage() {
   return (
     <div className="app-shell">
       <div className="global-background" aria-hidden="true">
@@ -26,8 +28,6 @@ function App() {
 
         <main>
           <Hero />
-          {/* <WhoBanner /> */}
-          {/* <ProofStrip /> */}
           <Features />
           <TruthLearn />
           <Testimonial />
@@ -39,7 +39,38 @@ function App() {
         <Footer />
       </div>
     </div>
-  );
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public webinar page */}
+        <Route path="/" element={<WebinarPage />} />
+
+        {/* Admin portal */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboard />
+            </ProtectedAdminRoute>
+          }
+        />
+        {/* Redirect /admin to dashboard */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboard />
+            </ProtectedAdminRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App

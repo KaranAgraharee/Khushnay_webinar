@@ -1,9 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useAuth, useClerk, useUser } from '@clerk/react'
-import {
-  getRegistrationStatus,
-  registerForWebinar,
-} from '../api/registration.js'
+import { useCallback, useState } from 'react'
+import { registerForWebinar } from '../api/registration.js'
 import { createPaymentOrder, verifyPayment } from '../api/payment.js'
 import { ApiError } from '../api/client.js'
 import { getUserFriendlyError, SUCCESS_MESSAGES } from '../utils/errorMessages.js'
@@ -11,49 +7,17 @@ import { loadRazorpayScript, openRazorpayCheckout } from '../utils/razorpay.js'
 import { useWebinar } from '../context/WebinarContext.jsx'
 
 export function useRegisterWebinar() {
-  const { getToken, isSignedIn, isLoaded: isAuthLoaded } = useAuth()
-  const { openSignIn } = useClerk()
-  const { user } = useUser()
   const { webinar, loading: webinarLoading } = useWebinar()
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
   const [isRegistered, setIsRegistered] = useState(false)
 
-  useEffect(() => {
-    if (!webinar?._id || !isAuthLoaded || !isSignedIn) {
-      setIsRegistered(false)
-      return
-    }
-
-    let cancelled = false
-
-    getRegistrationStatus(webinar._id, getToken)
-      .then((result) => {
-        if (cancelled) return
-
-        if (result.data?.isRegistered) {
-          setIsRegistered(true)
-          setStatus('success')
-          setMessage(SUCCESS_MESSAGES.alreadyRegistered)
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setIsRegistered(false)
-        }
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [webinar?._id, isAuthLoaded, isSignedIn, getToken])
-
-  const register = useCallback(async () => {
-    if (!isAuthLoaded) {
-      setStatus('loading')
-      setMessage('Checking authentication status…')
-      return
-    }
+  /**
+   * Main registration function.
+   * @param {{ name: string, phone: string, email: string }} profile
+   */
+  const register = useCallback(async (profile) => {
+    const { name, phone, email } = profile || {}
 
     if (webinarLoading) {
       setStatus('loading')
@@ -63,18 +27,13 @@ export function useRegisterWebinar() {
 
     if (!webinar?._id) {
       setStatus('error')
-      setMessage('No webinar is available for registration right now. Please wait a moment and refresh.')
+      setMessage('No webinar is available for registration right now. Please refresh.')
       return
     }
 
-    if (!isSignedIn) {
-      openSignIn()
-      return
-    }
-
-    if (isRegistered) {
-      setStatus('success')
-      setMessage(SUCCESS_MESSAGES.alreadyRegistered)
+    if (!name?.trim() || !phone?.trim() || !email?.trim()) {
+      setStatus('error')
+      setMessage('Please fill in all fields: name, phone, and email.')
       return
     }
 
@@ -85,12 +44,9 @@ export function useRegisterWebinar() {
       const isFree = Number(webinar.price ?? 0) <= 0
 
       if (isFree) {
-        const registrationResult = await registerForWebinar(webinar._id, getToken, {
-          email: user?.primaryEmailAddress?.emailAddress,
-          name: user?.fullName || user?.username || '',
-        })
+        const result = await registerForWebinar(webinar._id, { name: name.trim(), phone: phone.trim(), email: email.trim() })
 
-        if (registrationResult.alreadyRegistered) {
+        if (result.alreadyRegistered) {
           setIsRegistered(true)
           setStatus('success')
           setMessage(SUCCESS_MESSAGES.alreadyRegistered)
@@ -103,7 +59,12 @@ export function useRegisterWebinar() {
         return
       }
 
-      const orderResult = await createPaymentOrder(webinar._id, getToken)
+      // Paid webinar: create Razorpay order
+      const orderResult = await createPaymentOrder(webinar._id, {
+        name: name.trim(),
+        phone: phone.trim(),
+        email: email.trim(),
+      })
 
       if (orderResult.alreadyRegistered) {
         setIsRegistered(true)
@@ -126,7 +87,7 @@ export function useRegisterWebinar() {
 
       openRazorpayCheckout({
         order,
-        user,
+        profile: { name: name.trim(), email: email.trim(), phone: phone.trim() },
         onDismiss: () => {
           setStatus('idle')
           setMessage(SUCCESS_MESSAGES.paymentCancelled)
@@ -134,15 +95,15 @@ export function useRegisterWebinar() {
         onSuccess: async (response) => {
           try {
             setStatus('loading')
-            const verified = await verifyPayment(
-              {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                webinarId: webinar._id,
-              },
-              getToken
-            )
+            const verified = await verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              webinarId: webinar._id,
+              name: name.trim(),
+              email: email.trim(),
+              phone: phone.trim(),
+            })
 
             setIsRegistered(true)
             setStatus('success')
@@ -156,8 +117,7 @@ export function useRegisterWebinar() {
             setMessage(
               getUserFriendlyError(err, {
                 context: 'payment',
-                fallback:
-                  'Payment verification failed. Please contact support if you were charged.',
+                fallback: 'Payment verification failed. Please contact support if you were charged.',
               })
             )
           }
@@ -175,7 +135,7 @@ export function useRegisterWebinar() {
         })
       )
     }
-  }, [webinar, isSignedIn, isAuthLoaded, webinarLoading, openSignIn, getToken, user, isRegistered])
+  }, [webinar, webinarLoading])
 
   const reset = useCallback(() => {
     setStatus('idle')
@@ -189,7 +149,6 @@ export function useRegisterWebinar() {
     reset,
     webinar,
     isRegistered,
-    isAuthLoaded,
     webinarLoading,
   }
 }

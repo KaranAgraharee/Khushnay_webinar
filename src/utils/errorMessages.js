@@ -4,7 +4,7 @@ const EXACT_MESSAGES = {
   'Webinar not available for registration': 'This webinar is not open for registration right now.',
   'No payment required for this webinar': 'No payment is needed for this webinar.',
   'You are already registered for this webinar': "You're already registered for this webinar.",
-  'Payment is required before registration for this webinar':
+  'Payment is required for this webinar. Please use the payment flow.':
     'Please complete payment to register for this webinar.',
   'Missing Razorpay payment verification fields':
     'Payment details were incomplete. Please try again or contact support.',
@@ -12,11 +12,8 @@ const EXACT_MESSAGES = {
     'We could not verify your payment. If money was deducted, please contact support with your payment ID.',
   'Payment record not found':
     'We could not find your payment record. Please try registering again.',
-  'Not authorized for this payment':
-    'This payment belongs to a different account. Please sign in with the correct account.',
   'Webinar does not match payment order':
     'Something went wrong with your registration. Please try again.',
-  'Unauthorized — sign in and try again': 'Please sign in to continue.',
   'Payment gateway is not configured on the server':
     'Payment is temporarily unavailable. Please try again later or contact support.',
   'Amount must be greater than zero':
@@ -29,6 +26,10 @@ const EXACT_MESSAGES = {
     "You're registered, but we couldn't send the confirmation email right now. Please check back shortly.",
   'Failed to load Razorpay checkout':
     'Could not open the payment window. Check your connection and try again.',
+  'Name is required': 'Please enter your full name.',
+  'Phone number is required': 'Please enter your phone number.',
+  'Email is required': 'Please enter your email address.',
+  'Invalid email address': 'Please enter a valid email address.',
 }
 
 const PATTERN_MESSAGES = [
@@ -46,26 +47,29 @@ const PATTERN_MESSAGES = [
     message: 'Could not reach the server. Check your internet connection and try again.',
   },
   {
-    test: /clerk|jwt|token|unauthorized|sign in|session expired/i,
-    message: 'Your session expired. Please sign in and try again.',
-  },
-  {
-    test: /mongodb|mongo|cast to objectid|validation failed|duplicate key/i,
+    test: /mongodb|mongo|cast to objectid|validation failed|duplicate key|e11000/i,
     message: 'Something went wrong on our end. Please refresh and try again.',
   },
   {
-    test: /internal server|server error|stack|syntaxerror|typeerror|unexpected token/i,
+    test: /internal server|stack|syntaxerror|typeerror|unexpected token/i,
     message: 'Something went wrong on our end. Please try again in a moment.',
   },
   {
-    test: /api redirected|check server clerk/i,
-    message: 'Sign-in session issue. Please sign out, sign in again, and retry.',
+    test: /api redirected/i,
+    message: 'Request was redirected unexpectedly. Please refresh the page and try again.',
+  },
+  // Catch any auth/sign-in jargon that leaks from the server — users on this
+  // platform don't have accounts, so "sign in" messages are always wrong.
+  {
+    test: /unauthorized|sign.?in|session.?expired|not.?authorized|access.?denied|forbidden/i,
+    message: 'Something went wrong. Please refresh the page and try again.',
   },
 ]
 
 const STATUS_MESSAGES = {
   400: 'Please check your details and try again.',
-  401: 'Please sign in to continue.',
+  // 401 for public routes = server misconfiguration, not a user auth issue
+  401: 'Something went wrong. Please refresh and try again.',
   403: 'You do not have permission to do that.',
   404: 'We could not find that information. Please refresh the page.',
   408: 'The request took too long. Please try again.',
@@ -131,10 +135,14 @@ export function getUserFriendlyError(error, options = {}) {
     if (status >= 500 || !rawMessage || isTechnicalMessage(rawMessage)) {
       return STATUS_MESSAGES[status]
     }
+    // For client errors with a readable message, show it directly if it's short and clean
+    if (status < 500 && rawMessage && !isTechnicalMessage(rawMessage)) {
+      return rawMessage
+    }
   }
 
   if (status === 0) {
-    return STATUS_MESSAGES[408] || 'Could not reach the server. Check your internet connection and try again.'
+    return 'Could not reach the server. Check your internet connection and try again.'
   }
 
   if (context === 'payment') {
@@ -142,15 +150,11 @@ export function getUserFriendlyError(error, options = {}) {
   }
 
   if (context === 'registration') {
-    return 'Registration could not be completed. Please try again.'
+    return 'Registration could not be completed. Please check your details and try again.'
   }
 
   if (context === 'webinar') {
     return 'Could not load webinar details. Please refresh the page.'
-  }
-
-  if (context === 'auth') {
-    return 'Could not sync your account. Please sign in again.'
   }
 
   return fallback
@@ -168,9 +172,7 @@ export function toUserFriendlyApiMessage(rawMessage, status, meta = {}) {
       ? 'registration'
       : meta.path?.includes('webinar')
         ? 'webinar'
-        : meta.path?.includes('auth')
-          ? 'auth'
-          : undefined
+        : undefined
 
   return getUserFriendlyError(
     { message: rawMessage, status, payload: { path: meta.path } },

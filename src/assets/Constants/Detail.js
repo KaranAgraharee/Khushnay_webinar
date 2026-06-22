@@ -50,7 +50,7 @@ export const Webinar_info = {
     title: 'What Happens During the Webinar',
     description:
         'A structured 90-minute live session with Q&A — designed for working professionals with busy schedules.',
-    price: '₹99',
+    price: '₹33',
     security:'🛡️ Privacy-Focused Webinar',
     registerNote:
         'Online · Either partner can join alone.· Registered attendees receive a replay link valid for 48 hours',

@@ -13,9 +13,15 @@ export function loadRazorpayScript() {
   })
 }
 
-export function openRazorpayCheckout({ order, user, onSuccess, onDismiss }) {
-  // console.log("FULL ORDER:", order);
-  // console.log("ORDER ID:", order.orderId);
+/**
+ * @param {{
+ *   order: { orderId: string, amount: number, currency: string, key: string },
+ *   profile: { name: string, email: string, phone: string },
+ *   onSuccess: (response: any) => void,
+ *   onDismiss: () => void,
+ * }} params
+ */
+export function openRazorpayCheckout({ order, profile, onSuccess, onDismiss }) {
   const options = {
     key: order.key,
     amount: Math.round(order.amount * 100),
@@ -24,8 +30,9 @@ export function openRazorpayCheckout({ order, user, onSuccess, onDismiss }) {
     description: 'Webinar registration',
     order_id: order.orderId,
     prefill: {
-      name: user?.fullName || '',
-      email: user?.primaryEmailAddress?.emailAddress || '',
+      name: profile?.name || '',
+      email: profile?.email || '',
+      contact: profile?.phone || '',
     },
     handler: onSuccess,
     modal: {
