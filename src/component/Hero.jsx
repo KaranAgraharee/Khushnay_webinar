@@ -66,7 +66,7 @@ const Hero = () => {
 
           <Reveal variant="fadeUp" animateOnMount delay={0.4}>
             <div className="hero-actions">
-              <Register                
+              <Register
                 className="btn btn-primary btn-primary-lg"
                 pulse
                 label={`Reserve My Seat · ${webinar ? formatWebinarPrice(webinar.price) : Webinar_info.price} →`}
