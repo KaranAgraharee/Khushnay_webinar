@@ -53,3 +53,36 @@ export function exportRegistrationsCSV(params = {}) {
   a.download = 'registrations.csv'
   a.click()
 }
+
+// ─── Webinar CRUD ─────────────────────────────────────────────────────────────
+
+export function createWebinar(data) {
+  return apiRequest('/api/admin/webinars', {
+    method: 'POST',
+    body: data,
+    adminAuth: true,
+  })
+}
+
+export function updateWebinar(id, data) {
+  return apiRequest(`/api/admin/webinars/${id}`, {
+    method: 'PUT',
+    body: data,
+    adminAuth: true,
+  })
+}
+
+export function deleteWebinar(id) {
+  return apiRequest(`/api/admin/webinars/${id}`, {
+    method: 'DELETE',
+    adminAuth: true,
+  })
+}
+
+export function togglePublish(id, isPublished) {
+  return apiRequest(`/api/admin/webinars/${id}/publish`, {
+    method: 'PATCH',
+    body: { isPublished },
+    adminAuth: true,
+  })
+}

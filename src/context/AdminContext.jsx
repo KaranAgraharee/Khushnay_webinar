@@ -26,6 +26,15 @@ export function AdminProvider({ children }) {
 
   const isAuthenticated = useMemo(() => isTokenValid(token), [token])
 
+  const adminEmail = useMemo(() => {
+    if (!token) return null
+    try {
+      return JSON.parse(atob(token.split('.')[1]))?.email || null
+    } catch {
+      return null
+    }
+  }, [token])
+
   const login = useCallback(async (email, password) => {
     setLoading(true)
     setError(null)
@@ -63,8 +72,8 @@ export function AdminProvider({ children }) {
   }, [])
 
   const value = useMemo(
-    () => ({ token, isAuthenticated, login, logout, loading, error }),
-    [token, isAuthenticated, login, logout, loading, error]
+    () => ({ token, isAuthenticated, adminEmail, login, logout, loading, error }),
+    [token, isAuthenticated, adminEmail, login, logout, loading, error]
   )
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>
